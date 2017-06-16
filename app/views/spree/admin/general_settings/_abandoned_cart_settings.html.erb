@@ -1,0 +1,21 @@
+<div class="alpha six columns">
+  <fieldset class="security no-border-bottom">
+    <legend align="center"><%= Spree.t(:abandoned_cart_settings) %></legend>
+    	<div class="field">
+		    <%= label_tag :abandoned_after_minutes, Spree.t(:empty_abandoned_carts_after_minutes) %>
+		    <div>
+		      <%= number_field_tag :abandoned_after_minutes, Spree::Config[:abandoned_after_minutes], :style => 'width:100%!important;' %>
+		    </div>
+		  </div>
+		  <div class="field">
+		    <%= label_tag :worker_frequency_minutes, Spree.t(:abandoned_cart_worker_frequency) %>
+		    <div>
+		      <%= number_field_tag :worker_frequency_minutes, Spree::Config[:worker_frequency_minutes], :style => 'width:100%!important;' %>
+		    </div>
+		  </div>
+		  <div id="new-styles" class="row frameless"></div>
+      <div class="field">
+        <%= link_to_with_icon 'icon-refresh', Spree.t(:run_abandoned_carts), abandoned_cart_admin_general_settings_path, :method=> :post, :class => 'run_abandoned_carts button' %>
+      </div>
+  </fieldset>
+</div>
