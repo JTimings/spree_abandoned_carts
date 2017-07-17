@@ -1,8 +1,13 @@
-en:
+th:
   spree:
-    abandoned_cart_subject: Abandoned Cart
+    abandoned_cart_subject: "เราสังเกตว่าคุณมีสินค้าอยู่ในตะกร้าที่ยังไม่ได้สั่ง"
     abandoned_cart_settings: "abandoned cart settings"
     empty_abandoned_carts_after_minutes: "consider carts abandoned after: (minutes)"
     abandoned_cart_worker_frequency: "run abandoned cart actions every: (minutes)"
     run_abandoned_carts: "run abandoned carts"
     abandoned_cart_actions_run: "Abandoned cart actions run successfully"
+    abandoned_cart_finish_checking_out: "CHECKOUT ตอนนี้เลย"
+    abandoned_cart_checkout: "CHECKOUT"
+    abandoned_cart_need_help: "ต้องการความช่วยเหลือ?"
+    abandoned_cart_email_text: "เราสังเกตว่าคุณมีสินค้าทิ้งไว้ในตะกร้าที่ยังไม่ได้สั่ง ระวังแมวขโมยนะ 😺 ถ้ามีคำถามหรือติดปัญหาอะไร ตอบอีเมล์นี้ได้เลย"
+    quick_all_gone: "เร็วเข้าเดี๋ยวจะหมดเสียก่อน"

@@ -1,8 +1,13 @@
 en:
   spree:
-    abandoned_cart_subject: Abandoned Cart
+    abandoned_cart_subject: "we noticed you left some items in your bag."
     abandoned_cart_settings: "abandoned cart settings"
     empty_abandoned_carts_after_minutes: "consider carts abandoned after: (minutes)"
     abandoned_cart_worker_frequency: "run abandoned cart actions every: (minutes)"
     run_abandoned_carts: "run abandoned carts"
     abandoned_cart_actions_run: "Abandoned cart actions run successfully"
+    abandoned_cart_finish_checking_out: "finish checking out"
+    abandoned_cart_checkout: "checkout"
+    abandoned_cart_need_help: "need some help?"
+    abandoned_cart_email_text: "You left some items in your bag - and we're not the only ones that noticed 😺 . If you have any questions or need a hand, just reply to this email. Or click below to finish checking out."
+    quick_all_gone: "quick before it's all gone!"

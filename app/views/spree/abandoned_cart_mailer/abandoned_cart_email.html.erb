@@ -1,0 +1,131 @@
+<table>
+  <tr>
+    <td>
+
+      <center class="grid_fullwidth_img">
+        <table>
+          <tr>
+            <td>
+              <%= link_to( image_tag('store/you-left-some-items-in-your-bag.gif', :alt => 'You Left Some Items In Your Bag', :class => "pic img-responsive", :style => "border-bottom: 1px solid #cccccc;", :height => '395', :width => '620'), ( @order.state == 'cart' ? url_for(controller: 'spree/products', action: 'index', only_path: false) : url_for(controller: 'spree/checkout', action: 'edit', only_path: false) ) ) %>
+            </td>
+          </tr>
+        </table>
+      </center>
+
+      <center class="p_wrapper">
+        <table>
+          <tr>
+            <td>
+              <h3 class="caps sans-serif" style="padding-bottom: 20px; font-size: 24px !important"><%= Spree.t(:quick_all_gone).upcase %></h3>
+              <p class="serif"><%= Spree.t(:abandoned_cart_email_text) %></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+
+      <center>
+        <table style="width:180px; margin-bottom: 40px;">
+          <tr>
+            <td class="sans-serif caps" style="border:0 !important; white-space: nowrap">
+              <a class="button sans-serif caps brand_colour_border brand_colour" style="padding: 10px;" href="<%= url_for(controller: 'spree/static_content', action: 'show', path: 'contact', only_path: false) %>"><%= Spree.t(:abandoned_cart_need_help).upcase %></a>
+              &nbsp;&nbsp;
+              <a class="button sans-serif caps brand_colour_bg white_text" style="padding: 10px;" href="<%= ( @order.state == 'cart' ? url_for(controller: 'spree/products', action: 'index', only_path: false) : url_for(controller: 'spree/checkout', action: 'edit', only_path: false) ) %>"><%= Spree.t(:abandoned_cart_finish_checking_out).upcase %></a>
+            </td>
+          </tr>
+        </table>
+      </center>
+
+      <% sorted_line_items = @order.line_items.sort_by{|a| [ Time.zone.parse(a.delivery_date), a.id ]} %>  
+
+      <% line_items_per_date = Hash.new(0) %>
+      <% sorted_line_items.each { |h| line_items_per_date[h["delivery_date"]] += 1 } %>
+      <% line_items_per_date = Hash[line_items_per_date.map {|k,v| [k,v] }] %>
+
+      <% del_times_per_date = Hash.new(0) %>
+      <% sorted_line_items.each { |h| del_times_per_date[h["delivery_date"]] = h["delivery_time"]} %>
+      <% del_times_per_date = Hash[del_times_per_date.map {|k,v| [k,v] }] %>
+      <% keys = del_times_per_date.keys %>
+
+      <table>
+        <tr>
+          <td>
+            <h6 class="sans-serif caps order_confirm_your_order_title"><%= Spree.t(:your_order).upcase %></h6> 
+            
+            <% i=0 %>
+            <% line_items_per_date.each do |line_item_date| %>
+
+              <center align="left" class="order_confirm_your_order_item_day" style="padding-bottom:0px !important;">
+                <table>
+                  <tr>
+                    <td class="sans-serif caps">
+                    <% unless @order.package_purchase? %>
+                      <% if line_item_date[0].to_datetime.strftime("%D") == Date.current.strftime("%D") %>
+                        <p><%= Spree.t(:today).upcase %> (<%=Date.current.strftime("%d").to_i%> <%= l(Date.current,:format => ' %b').upcase %>) <%= Spree.t(:between).upcase unless del_times_per_date[keys[i]].blank? %> <%= del_times_per_date[keys[i]].upcase unless del_times_per_date[keys[i]].blank? %> </p>
+                      <% else %>
+                        <% if line_item_date[0].to_datetime.strftime("%D") == (Date.current+1).strftime("%D") %>
+                          <p><%= Spree.t(:tomorrow).upcase %> (<%=(Date.current+1).strftime("%d").to_i%> <%=l((Date.current+1),:format => ' %b').upcase%>) <%= Spree.t(:between).upcase unless del_times_per_date[keys[i]].blank? %> <%= del_times_per_date[keys[i]].upcase unless del_times_per_date[keys[i]].blank? %> </p>
+                        <% else %>
+                          <p><%= l(line_item_date[0].to_datetime,:format => '%A').upcase %>&nbsp;(<%=line_item_date[0].to_datetime.strftime("%d").to_i%> <%= l(line_item_date[0].to_datetime,:format => ' %b').upcase %>) <%= Spree.t(:between).upcase unless del_times_per_date[keys[i]].blank? %> <%= del_times_per_date[keys[i]].upcase unless del_times_per_date[keys[i]].blank? %> </p>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </center>
+
+            <center>
+              <table id='line-items' class="twelve columns order_confirm_your_order_items" style="width: auto !important;">
+                <tbody>
+                  <% sorted_line_items.each do |line_item| %>
+                    <% if line_item.delivery_date == line_item_date[0] %>
+                      <tr data-hook="order_details_line_item_row">
+                        <td class="two sub-columns" style="vertical-align: middle;" data-hook="order_item_image">
+                          <% if line_item.variant.images.length == 0 %>
+                            <%= link_to small_image(line_item.variant.product, :class => "pic img-responsive", :style => "max-width: 80%;"), url_for(controller: 'spree/products', action: 'show', id: line_item.variant.product.permalink, only_path: false) %>
+                          <% else %>
+                            <%= link_to image_tag(line_item.variant.images.first.attachment.url(:small), :class => "pic img-responsive", :style => "max-width: 80%;"), url_for(controller: 'spree/products', action: 'show', id: line_item.variant.product.permalink, only_path: false) %>
+                          <% end %>
+                        </td>
+                        <td class="five sub-columns" style="vertical-align: middle;" data-hook="order_item_description">
+                          <% if @order.package_purchase? %>
+                            <%= line_item.variant.option_values.first.name %> <%= Spree.t(:polpa_package)%>
+                          <% else %>
+                            <%= line_item.variant.product.name %>
+                          <% end %>
+                          <% if false %>
+                            <%= truncated_product_description(line_item.variant.product) %>
+                            <%= "(" + line_item.variant.options_text + ")" unless line_item.variant.option_values.empty? %>
+                          <% end %>
+                        </td>
+                        <td class="two sub-columns" style="text-align:right; vertical-align: middle;" data-hook="order_item_qty"><%= Spree.t(:qty) %><%= line_item.quantity %></td>
+                        <td class="one sub-columns"></td>
+                        <td class="two sub-columns last" style="text-align:right; vertical-align: middle;" data-hook="order_item_total" class="total"><span><%= line_item.display_amount.to_html %></span></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                </tbody>
+              </table>
+            </center>
+            <% i=i+1 %>
+          <% end %>
+
+          </td>
+          <td class="expander"></td>
+        </tr>
+      </table>
+
+      <center>
+        <table class="button" style="width:180px; margin-bottom: 40px; margin-top: 10px;">
+          <tr>
+            <td class="sans-serif caps brand_colour_bg" style="border:0 !important;">
+              <a class="sans-serif caps" href="<%= ( @order.state == 'cart' ? url_for(controller: 'spree/products', action: 'index', only_path: false) : url_for(controller: 'spree/checkout', action: 'edit', only_path: false) ) %>"><%= Spree.t(:abandoned_cart_checkout).upcase %></a>
+            </td>
+          </tr>
+        </table>
+      </center>
+       
+    </td>
+    <td class="expander"></td>
+  </tr>
+</table>
