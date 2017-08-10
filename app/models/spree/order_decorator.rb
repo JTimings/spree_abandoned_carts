@@ -21,8 +21,8 @@ module Spree
       remove_invalid_line_items
       # send abandoned cart email if cart not empty
       if line_items.present? 
-        Spree::AbandonedCartMailer.abandoned_cart_email(self).deliver
-        touch(:abandoned_cart_email_sent_at)
+        Spree::AbandonedCartMailer.abandoned_cart_email(self).deliver if user.receive_abandoned
+        touch(:abandoned_cart_email_sent_at) # even if user doesn't want reminders so order doesn't keep getting picked up as abandoned (pretty inefficient!! but had problems with joining orders and user tables...) 
       else
         # empty order if no line items -> want item_total=0 in this case else these orders will keep getting picked up as abandoned
         self.empty!
